@@ -14,6 +14,7 @@
         shadow
         hover:bg-gray-100
       "
+      @click="selectBoard(board)"
     >
       <div class="mt-5">
         <img v-bind:src="image" class="w-48" />
@@ -25,21 +26,26 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-
-type Board = {
-  name: string
-}
+import { Board } from '../../store/board'
 
 export default defineComponent({
+  name: 'BoardsList',
+  emits: ['select-board'],
   props: {
     boards: {
       type: Object as PropType<Board>,
       default: null,
     },
   },
-  setup(props) {
+  setup(props, context) {
+    const selectBoard = (board: Board) => {
+      console.log(board)
+      context.emit('select-board', board)
+    }
+
     return {
       image: 'src/assets/logo.png',
+      selectBoard,
     }
   },
 })

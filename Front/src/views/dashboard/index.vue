@@ -35,13 +35,13 @@
           <CreateBoardDialog
             v-show="showModal"
             @close="showModal = !showModal"
-            @createBoard="createBoard"
+            @create-board="createBoard"
           />
           <p class="ml-9 mt-3">New Board</p>
         </div>
       </div>
       <h3 class="text-3xl font-medium text-gray-700 mt-10">All Boards</h3>
-      <BoardsList :boards="boards" />
+      <BoardsList :boards="boards" @select-board="selectBoard" />
     </div>
   </div>
 </template>
@@ -56,7 +56,7 @@ import { defineComponent, computed } from 'vue'
 import router from '../../router'
 
 export default defineComponent({
-  name: 'App',
+  name: 'Dashboard',
   components: { CreateBoardDialog, BoardsList },
   setup() {
     const showModal = ref(false)
@@ -68,10 +68,15 @@ export default defineComponent({
       showModal.value = !showModal.value
       router.push(`/boards/${res.id}?notice=新しいボードを作成しました`)
     }
+    const selectBoard = (board: Board) => {
+      console.log(board)
+      router.push(`/boards/${board.id}`)
+    }
     return {
       showModal,
       boards: computed(() => store.state.boards), // ボードの一覧を返す
       createBoard,
+      selectBoard,
     }
   },
 })

@@ -6,6 +6,7 @@ import env from '../libs/environment'
 export interface Board {
   name: string
   author: string
+  id: number //uuidへ変更
 }
 
 // ストアの型を定義する
@@ -20,8 +21,8 @@ export const key: InjectionKey<Store<State>> = Symbol()
 export const store = createStore<State>({
   state: {
     boards: [
-      { name: 'hoge1', author: 'fuga' },
-      { name: 'hoge2', author: 'fuga' },
+      { name: 'hoge1', author: 'fuga', id: 1 },
+      { name: 'hoge2', author: 'fuga', id: 2 },
     ],
   },
   getters: {
