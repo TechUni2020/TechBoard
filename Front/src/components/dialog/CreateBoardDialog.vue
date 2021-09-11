@@ -55,7 +55,7 @@
                 "
               >
                 <svg
-                  class="h-6 w-6 text-red-600"
+                  class="h-6 w-6 text-yellow-600"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -75,7 +75,7 @@
                   class="text-lg leading-6 font-medium text-gray-900"
                   id="modal-headline"
                 >
-                  ボード名
+                  ボード名を入力
                 </h3>
                 <div class="mt-2">
                   <input
@@ -84,7 +84,7 @@
                     class="
                       px-2
                       py-1
-                      bg-gray-700
+                      bg-white
                       border border-gray-400
                       rounded-md
                       focus:outline-none
