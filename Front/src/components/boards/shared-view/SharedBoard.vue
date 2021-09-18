@@ -1,32 +1,44 @@
-<template>
-  <canvas id="canvas" class="bg-gray-50 min-h-screen" @wheel="onScroll">
-    <p>deltaY: {{ deltaY }}</p>
-    <p>deltaX: {{ deltaX }}</p>
-  </canvas>
+<template lang="pug">
+canvas.full-height(
+  ref="canvas"
+  :width="width" 
+  :height="height"
+  v-on:wheel='onScroll',
+  @mouseover='onMouseOver',
+  @mouseleave='onMouseLeave',
+  @mousemove='onDrag',
+  @mouseup='isClickNow = false',
+  @mousedown='isClickNow = true',
+  class="bg-gray-50 min-h-screen"
+)
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, PropType } from 'vue'
+import * as lodash from 'lodash'
 
+interface Transform {
+  x: number
+  y: number
+  scale: number
+}
 export default defineComponent({
-  name: 'Board',
-  setup() {
-    const deltaY = ref('')
-    const deltaX = ref('')
+  name: 'SharedBoard',
+  props: {
+    transform: {
+      type: Object as PropType<Transform>,
+      require: true,
+    },
+  },
+  emits: ['transform-changed'],
+  setup(props, context) {
+    const _ = lodash
+    const canvas = ref<HTMLCanvasElement | null>(null)
+    const width: number = window.innerWidth
+    const height: number = window.innerHeight
 
-    const onScroll = (event: WheelEvent) => {
-      // event.preventDefault()
-      deltaY.value += event.deltaY
-      deltaX.value += event.deltaX
-      console.log(`Y座標：${event.deltaY}`)
-      console.log(`X座標：${event.deltaX}`)
-    }
-    onMounted(() => {
-      const canvas = document.getElementById('canvas')
-      if (!(canvas instanceof HTMLCanvasElement)) return
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      const ctx = canvas.getContext('2d')
+    const draw = () => {
+      const ctx = canvas.value.getContext('2d')
       if (ctx === null) return
       ctx.strokeStyle = 'black'
       ctx.lineWidth = 0.03
@@ -39,13 +51,37 @@ export default defineComponent({
           }
         }
       }
-      console.log(ctx)
+    }
+
+    onMounted(() => {
+      draw()
     })
 
+    const onScroll = (event: WheelEvent) => {
+      event.preventDefault()
+      const transform = _.cloneDeep(props.transform)
+      if (event.ctrlKey) {
+        transform.scale = transform.scale - event.deltaY * 0.005
+      } else {
+        transform.x = transform.x + (event.deltaX * 0.5) / transform.scale
+        transform.y = transform.y + (event.deltaY * 0.5) / transform.scale
+      }
+      console.log(`Y座標：${transform.x}`)
+      console.log(`X座標：${transform.y}`)
+      changeTransform(transform)
+    }
+
+    const changeTransform = (transform: Transform) => {
+      console.log(`${transform}`)
+      context.emit('transform-changed', transform)
+    }
+
     return {
-      deltaY,
-      deltaX,
+      canvas,
+      width,
+      height,
       onScroll,
+      changeTransform,
     }
   },
 })
