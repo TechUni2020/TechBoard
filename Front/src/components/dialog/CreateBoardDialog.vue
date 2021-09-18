@@ -158,14 +158,14 @@
 import { defineComponent, reactive } from 'vue'
 export default defineComponent({
   name: 'CreateBoardDialog',
-  emits: ['createBoard'],
+  emits: ['create-board'],
   setup(_, context) {
     const board = reactive({
       name: '',
       author: '',
     })
     const createBoard = () => {
-      context.emit('createBoard', board.name)
+      context.emit('create-board', board.name)
       board.name = ''
     }
     return {

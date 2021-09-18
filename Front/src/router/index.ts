@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 
 import Home from '../views/Home.vue'
 import DashBoard from '../views/dashboard/Index.vue'
+import Board from '../views/board/_id.vue'
 import NotFound from '../views/NotFound.vue'
 const routes = [
   {
@@ -14,6 +15,12 @@ const routes = [
     path: '/dashboard',
     name: 'DashBoard',
     component: DashBoard,
+  },
+  {
+    path: '/boards/:id?',
+    name: 'Board',
+    component: Board,
+    meta: { layout: 'empty' },
   },
   // {
   //   path: "/:catchAll(.*)",
